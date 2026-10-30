@@ -28,6 +28,7 @@ st.set_page_config(
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, "data", "creditcard.csv")
+SAMPLE_DATA_PATH = os.path.join(BASE_DIR, "data", "creditcard_sample.csv")
 SAMPLE_BATCH_PATH = os.path.join(BASE_DIR, "data", "sample_batch_transactions.csv")
 MODEL_PATH = os.path.join(BASE_DIR, "models", "fraud_detection_ann.keras")
 SCALER_PATH = os.path.join(BASE_DIR, "models", "scaler.pkl")
@@ -191,9 +192,11 @@ def get_scaler():
 
 @st.cache_data
 def get_dataset(filepath: str = DATA_PATH):
-    """Loads dataset with caching."""
+    """Loads dataset with caching. Falls back to sample dataset if full dataset is absent."""
     if os.path.exists(filepath):
         return pd.read_csv(filepath)
+    if os.path.exists(SAMPLE_DATA_PATH):
+        return pd.read_csv(SAMPLE_DATA_PATH)
     return None
 
 @st.cache_data
